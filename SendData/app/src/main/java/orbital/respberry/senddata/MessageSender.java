@@ -2,32 +2,30 @@ package orbital.respberry.senddata;
 
 import android.os.AsyncTask;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.*;
+
 
 public class MessageSender extends AsyncTask<String, Void, Void> {
-    Socket s;
-    DataOutputStream dos;
-    PrintWriter pw;
+    private DatagramSocket socket;
+    private InetAddress address;
+    private byte[] buf = new byte[1024];
+
+    public MessageSender() throws SocketException, UnknownHostException{
+        socket = new DatagramSocket();
+        address = InetAddress.getByName("localhost");
+    }
 
     @Override
     protected Void doInBackground(String... voids) {
         String message = voids[0];
         try {
-            s = new Socket("192.168.1.6", 6000);
-            pw = new PrintWriter(s.getOutputStream());
-            pw.write(message);
-            pw.flush();
-            pw.close();
-            s.close();
-
+            buf = message.getBytes();
+            DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 27015);
+            socket.send(packet);
         }catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
         return null;
     }

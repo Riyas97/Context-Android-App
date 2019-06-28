@@ -1,20 +1,15 @@
 package orbital.respberry.senddata;
 
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import java.io.BufferedReader;
+import java.net.*;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
+import android.content.Intent;
+
 
 public class MainActivity extends AppCompatActivity {
-
 
     EditText e1;
     @Override
@@ -22,48 +17,53 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         e1 = (EditText)findViewById(R.id.editText);
-        Thread mine = new Thread(new MyServerThread());
-        mine.start();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
 
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+            if ("text/plain".equals(type)) {
+                handleSendText(intent);
+            }
+        }
 
     }
 
-    class MyServerThread implements Runnable {
-
-        Socket s;
-        ServerSocket ss;
-        InputStreamReader a;
-        BufferedReader b;
-        String message;
-        Handler h = new Handler();
-
-
-        @Override
-        public void run() {
-
+    public void send(View v) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run(){
                 try {
-                    ss = new ServerSocket(6001);
-
-                    while (true) {
-                        s = ss.accept();
-                        a = new InputStreamReader(s.getInputStream());
-                        b = new BufferedReader(a);
-                        message = b.readLine();
-                        h.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }catch (IOException e) {
+                    udpClient sender = new udpClient();
+                    String string_to_send = "explorer ";
+                    string_to_send = string_to_send.concat(e1.getText().toString()).concat("\0");
+                    sender.sendMsg(string_to_send);
+                } catch (IOException e){
                     e.printStackTrace();
                 }
+            }
+        });
+        thread.start();
+    }
 
+    public void handleSendText(Intent intent){
+        final String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+        if(sharedText != null){
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run(){
+                    try {
+                        udpClient sender = new udpClient();
+                        String string_to_send = "explorer ";
+                        string_to_send = string_to_send.concat(sharedText).concat("\0");
+                        sender.sendMsg(string_to_send);
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
         }
     }
-    public void send(View v) {
-        MessageSender messageSender = new MessageSender();
-        messageSender.execute(e1.getText().toString());
-    }
+
 }
