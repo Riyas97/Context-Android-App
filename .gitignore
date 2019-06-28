@@ -1,3 +1,11 @@
 # VS CODE #
 ###########
 .vscode
+
+# OBJECT FILES #
+################
+*.o
+
+# context.exe #
+###############
+Winsock_Program/context.exe
