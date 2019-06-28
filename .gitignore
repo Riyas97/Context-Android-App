@@ -2,9 +2,9 @@
 ###########
 .vscode
 
-# OBJECT FILES #
-################
-*.o
+# OBJECT FILES  in Winsock_Program #
+####################################
+Winsock_Program/*.o
 
 # context.exe #
 ###############
