@@ -24,9 +24,7 @@ public class MainActivity extends AppCompatActivity {
         String type = intent.getType();
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                handleSendText(intent);
-            }
+            handleSendText(intent);
         }
 
     }
@@ -43,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
                     to_send = sender.recvMsg();
                     Log.i("asd",to_send);
                     if(to_send.equals("send")) {
-                        String string_to_send = "22explorer ";
-                        string_to_send = string_to_send.concat(e1.getText().toString()).concat("\0");
+                        String string_to_send = "22explorer \"";
+                        string_to_send = string_to_send.concat(e1.getText().toString()).concat("\"\0");
                         sender.sendMsg(string_to_send);
                         sender.recvMsg();
                     }
@@ -70,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
                         to_send = sender.recvMsg();
                         Log.i("asd",to_send);
                         if(to_send.equals("send")) {
-                            String string_to_send = "22explorer ";
-                            string_to_send = string_to_send.concat(sharedText).concat("\0");
+                            String string_to_send = "22explorer \"";
+                            string_to_send = string_to_send.concat(sharedText).concat("\"\0");
                             sender.sendMsg(string_to_send);
                             sender.recvMsg();
                         }
