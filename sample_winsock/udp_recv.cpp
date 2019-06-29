@@ -118,7 +118,8 @@ int main()
         wprintf(L"recvfrom failed with error %d\n", WSAGetLastError());
     }
     printf("%s\n", RecvBuf);
-    system(RecvBuf);
+    iResult = recvfrom(RecvSocket,
+                       RecvBuf, BufLen, 0, (SOCKADDR *) & SenderAddr, &SenderAddrSize);
  
     //-----------------------------------------------
     // Close the socket when finished receiving datagrams

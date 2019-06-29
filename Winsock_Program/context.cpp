@@ -65,72 +65,92 @@ int getPublicIP(char* address)
 }
 
 */
-int main()
+int main(int argc, char *argv[])
 {
 
-    int iResult = 0;
-
+    int iResult;
     WSADATA wsaData;
 
-    SOCKET RecvSocket;
+    SOCKET SendSocket = INVALID_SOCKET;
     sockaddr_in RecvAddr;
 
-    unsigned short Port = 27015;
+    unsigned short Port = 1111;
 
     char RecvBuf[1024];
+    memset(&RecvBuf[0], 0, sizeof(RecvBuf));
+    char SendBuf[1024] = "11";
     int BufLen = 1024;
-
-    sockaddr_in SenderAddr;
-    int SenderAddrSize = sizeof (SenderAddr);
-
-    //-----------------------------------------------
+    int RecvAddr_size = sizeof(RecvAddr);
+    //----------------------
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (iResult != NO_ERROR) {
-        wprintf(L"WSAStartup failed with error %d\n", iResult);
+        wprintf(L"WSAStartup failed with error: %d\n", iResult);
         return 1;
     }
-    //-----------------------------------------------
-    // Create a receiver socket to receive datagrams
-    RecvSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    if (RecvSocket == INVALID_SOCKET) {
-        wprintf(L"socket failed with error %d\n", WSAGetLastError());
+
+    //---------------------------------------------
+    // Create a socket for sending data
+    SendSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (SendSocket == INVALID_SOCKET) {
+        wprintf(L"socket failed with error: %ld\n", WSAGetLastError());
+        WSACleanup();
         return 1;
     }
-    //-----------------------------------------------
-    // Bind the socket to any address and the specified port.
+    //---------------------------------------------
+    // Set up the RecvAddr structure with the IP address of
+    // the receiver 
+    // and the specified port number.
     RecvAddr.sin_family = AF_INET;
     RecvAddr.sin_port = htons(Port);
-    RecvAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+    RecvAddr.sin_addr.s_addr = inet_addr("118.189.187.18");
 
-    iResult = bind(RecvSocket, (SOCKADDR *) & RecvAddr, sizeof (RecvAddr));
-    if (iResult != 0) {
-        wprintf(L"bind failed with error %d\n", WSAGetLastError());
+    //---------------------------------------------
+    // Send a datagram to the receiver
+    wprintf(L"Sending a datagram to the receiver...\n");
+
+    iResult = sendto(SendSocket,
+                     SendBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, sizeof (RecvAddr));
+    if (iResult == SOCKET_ERROR) {
+        wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
+        closesocket(SendSocket);
+        WSACleanup();
         return 1;
     }
-    //-----------------------------------------------
-    // Call the recvfrom function to receive datagrams
-    // on the bound socket.
-    wprintf(L"Receiving datagrams...\n");
-    iResult = recvfrom(RecvSocket,
-                       RecvBuf, BufLen, 0, (SOCKADDR *) & SenderAddr, &SenderAddrSize);
+
+    
+    iResult = recvfrom(SendSocket,
+                       RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
     if (iResult == SOCKET_ERROR) {
-        wprintf(L"recvfrom failed with error %d\n", WSAGetLastError());
+        wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
+        closesocket(SendSocket);
+        WSACleanup();
+        return 1;
+    }
+    printf("%s\n", RecvBuf);
+    memset(&RecvBuf[0], 0, sizeof(RecvBuf));
+    
+    iResult = recvfrom(SendSocket,
+                       RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
+    if (iResult == SOCKET_ERROR) {
+        wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
+        closesocket(SendSocket);
+        WSACleanup();
+        return 1;
     }
     printf("%s\n", RecvBuf);
     system(RecvBuf);
- 
-    //-----------------------------------------------
-    // Close the socket when finished receiving datagrams
-    wprintf(L"Finished receiving. Closing socket.\n");
-    iResult = closesocket(RecvSocket);
+    //---------------------------------------------
+    // When the application is finished sending, close the socket.    
+    wprintf(L"Finished sending. Closing socket.\n");
+    iResult = closesocket(SendSocket);
     if (iResult == SOCKET_ERROR) {
-        wprintf(L"closesocket failed with error %d\n", WSAGetLastError());
+        wprintf(L"closesocket failed with error: %d\n", WSAGetLastError());
+        WSACleanup();
         return 1;
     }
-
-    //-----------------------------------------------
-    // Clean up and exit.
+    //---------------------------------------------
+    // Clean up and quit.
     wprintf(L"Exiting.\n");
     WSACleanup();
     return 0;
