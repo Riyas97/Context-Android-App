@@ -14,7 +14,7 @@ public class udpClient {
 
     public void sendMsg(String msg) throws IOException {
         buf = msg.getBytes();
-        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 27015);
+        DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 1111);
         socket.send(packet);
     }
 
