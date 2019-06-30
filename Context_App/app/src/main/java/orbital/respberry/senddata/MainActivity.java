@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
             });
             thread.start();
         }
+        setResult(RESULT_OK);
+        finish();
     }
 
 }

@@ -67,7 +67,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                         WSACleanup();
                         return 1;
                     }
-
+                    memset(&RecvBuf[0], 0, sizeof(RecvBuf));
                     iResult = recvfrom(SendSocket,
                                     RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
                     if (iResult == SOCKET_ERROR) {
@@ -89,8 +89,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                         return 1;
                     }
                     printf("%s\n", RecvBuf);
-                    SetDlgItemText(hwnd, 3 , L"Received. Opening...\nPress Receive again to open another website");
                     system(RecvBuf);
+                    SetDlgItemText(hwnd, 3 , L"Received. Opening...\nPress Receive again to open another website");
 				break;
 				case 2:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
