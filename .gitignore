@@ -2,10 +2,12 @@
 ###########
 .vscode
 
-# OBJECT FILES  in Winsock_Program #
-####################################
+# OBJECT FILES #
+################
 Winsock_Program/*.o
+sample_win_gui/*.o
 
-# context.exe #
+# Executables #
 ###############
-Winsock_Program/context.exe
+Winsock_Program/*.exe
+sample_win_gui/*.exe
