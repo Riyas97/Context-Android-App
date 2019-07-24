@@ -1,15 +1,20 @@
-#ifndef UNICODE
-#define UNICODE
-#endif
-
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <stdio.h>
 #include <windows.h>
+#include <string>
+#include <cstring>
+#include <curl/curl.h>
 
 #include "resource.h"
 
-const wchar_t g_szClassName[] = L"myWindowClass";
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+  ((std::string*)userp)->append((char*)contents, size * nmemb);
+  return size * nmemb;
+}
+
+LPCSTR g_szClassName = "myWindowClass";
 int iResult;
 WSADATA wsaData;
 
@@ -25,23 +30,48 @@ int RecvAddr_size = sizeof(RecvAddr);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+    static HWND hwndEmail, hwndPass, EmailText, PassText, LoginButton;
 	switch(Message)
 	{
         case WM_CREATE:
         {
-            CreateWindow(TEXT("button"), TEXT("Receive"),    
-                        WS_VISIBLE | WS_CHILD ,
-                        100, 80, 80, 25,        
-                        hwnd, (HMENU) 1, NULL, NULL);    
+            hwndEmail = CreateWindowEx(
+                WS_EX_LEFT, "EDIT",   // predefined class 
+                NULL,         // no window title 
+                WS_CHILD | WS_VISIBLE | ES_LEFT | ES_AUTOHSCROLL | WS_TABSTOP, 
+                110, 30, 240, 20,   // set size in WM_SIZE message 
+                hwnd,         // parent window 
+                (HMENU) 3,   // edit control ID 
+                (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE), 
+                NULL);        // pointer not needed
 
-            CreateWindow(TEXT("button"), TEXT("Quit"),    
-                        WS_VISIBLE | WS_CHILD ,
-                        200, 80, 80, 25,        
-                        hwnd, (HMENU) 2, NULL, NULL);
-            CreateWindow(L"STATIC", L"Press receive to get website from app", 
-            WS_VISIBLE | WS_CHILD | SS_CENTER, 
-            40, 10, 300, 50, 
-            hwnd, (HMENU) 3, NULL, NULL);
+            EmailText = CreateWindow("STATIC", TEXT("Email:"), 
+                WS_VISIBLE | WS_CHILD | SS_LEFT, 
+                20, 30, 80, 20, hwnd, 
+                (HMENU) 4, 
+                (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE), 
+                NULL);
+            
+            hwndPass = CreateWindowEx(
+                WS_EX_LEFT, "EDIT",   // predefined class 
+                NULL,         // no window title 
+                WS_CHILD | WS_VISIBLE | ES_LEFT | ES_AUTOHSCROLL | ES_PASSWORD | WS_TABSTOP, 
+                110, 55, 240, 20,   // set size in WM_SIZE message 
+                hwnd,         // parent window 
+                (HMENU) 5,   // edit control ID 
+                (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE), 
+                NULL);        // pointer not needed
+
+            PassText = CreateWindow("STATIC", TEXT("Password:"), 
+                WS_VISIBLE | WS_CHILD | SS_LEFT, 
+                20, 55, 80, 20, hwnd, 
+                (HMENU) 6, 
+                (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE), 
+                NULL);
+
+            LoginButton = CreateWindow("button", "Login",
+                WS_VISIBLE | WS_CHILD, 50, 100, 80, 25,
+                hwnd, (HMENU) 7, NULL, NULL);
         }
         break;
         case WM_PAINT:
@@ -57,7 +87,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		case WM_COMMAND:
 			switch(LOWORD(wParam))
 			{
-				case 1:                    
+				case 1:
                     //START PROCESS FOR RECEIVING DATA
                     iResult = sendto(SendSocket,
                      SendBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, sizeof (RecvAddr));
@@ -78,7 +108,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     }
                     printf("%s\n", RecvBuf);
                     memset(&RecvBuf[0], 0, sizeof(RecvBuf));
-                    SetDlgItemText(hwnd, 3 , L"Waiting to Receive, Please use app to send...");
+                    SetDlgItemText(hwnd, 3 , "Waiting to Receive, Please use app to send...");
                     
                     iResult = recvfrom(SendSocket,
                                     RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
@@ -90,11 +120,73 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     }
                     printf("%s\n", RecvBuf);
                     system(RecvBuf);
-                    SetDlgItemText(hwnd, 3 , L"Received. Opening...\nPress Receive again to open another website");
+                    SetDlgItemText(hwnd, 3 , "Received. Opening...\nPress Receive again to open another website");
 				break;
 				case 2:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
 				break;
+                case 7:
+                    TCHAR email_buf[256], password_buf[256];
+                    HWND email_edit = GetDlgItem(hwnd, 3);
+                    HWND pass_edit = GetDlgItem(hwnd, 5);
+                    GetWindowText(email_edit, email_buf, 256);
+                    GetWindowText(pass_edit, password_buf, 256);
+                    //START OF CURL CODE
+
+                    CURL *curl;
+                    CURLcode res;
+                    std::string readBuffer;
+                    curl_global_init(CURL_GLOBAL_ALL);
+                    curl = curl_easy_init();
+                    if(curl) {
+                        curl_easy_setopt(curl, CURLOPT_URL, "http://118.189.187.18/login.php");
+
+                        std::string email = email_buf;
+                        std::string email_encode = curl_easy_escape(curl,email.c_str(),strlen(email.c_str()));
+                        std::string password = password_buf;
+                        std::string password_encode = curl_easy_escape(curl,password.c_str(),strlen(password.c_str()));
+                        std::string output = "email=" + email_encode + "&password=" + password_encode;
+                        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, output.c_str());
+                        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+                        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+                        res = curl_easy_perform(curl);
+                        if(res != CURLE_OK) 
+                            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                        curl_easy_strerror(res));
+                        curl_easy_cleanup(curl);
+                        std::string temp;
+                        temp = readBuffer[10];
+                        int status = stoi(temp);
+                        if (status == 0){
+                            size_t pos = readBuffer.find("id");
+                            temp = readBuffer.substr(pos+4);
+                            temp.pop_back();
+                            strcat(SendBuf, temp.c_str());
+                        }
+                    }
+                    curl_global_cleanup();
+
+                    DestroyWindow(hwndPass);
+                    DestroyWindow(hwndEmail);
+                    DestroyWindow(EmailText);
+                    DestroyWindow(PassText);
+                    DestroyWindow(LoginButton);
+
+                    CreateWindow(TEXT("button"), TEXT("Receive"),    
+                        WS_VISIBLE | WS_CHILD ,
+                        100, 80, 80, 25,        
+                        hwnd, (HMENU) 1, NULL, NULL);    
+
+                    CreateWindow(TEXT("button"), TEXT("Quit"),    
+                        WS_VISIBLE | WS_CHILD ,
+                        200, 80, 80, 25,        
+                        hwnd, (HMENU) 2, NULL, NULL);
+
+                    CreateWindow("STATIC", "Press receive to get website from app", 
+                        WS_VISIBLE | WS_CHILD | SS_CENTER, 
+                        40, 10, 300, 50, 
+                        hwnd, (HMENU) 3, NULL, NULL);
+                break;
 			}
 		break;
 		case WM_CLOSE:
@@ -144,7 +236,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	if(!RegisterClassEx(&wc))
 	{
-		MessageBox(NULL, L"Window Registration Failed!", L"Error!",
+		MessageBox(NULL, "Window Registration Failed!", "Error!",
 			MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
@@ -152,7 +244,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	hwnd = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		g_szClassName,
-		L"Context",
+		"Context",
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, 400, 200,
 		NULL, NULL, hInstance, NULL);
@@ -169,7 +261,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	if(hwnd == NULL)
 	{
-		MessageBox(NULL, L"Window Creation Failed!", L"Error!",
+		MessageBox(NULL, "Window Creation Failed!", "Error!",
 			MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
@@ -208,13 +300,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     //WINSOCK CODE ENDS HERE////
     ///////////////////////////
 
-
-	while(GetMessage(&Msg, NULL, 0, 0) > 0)
-	{
-		TranslateMessage(&Msg);
-		DispatchMessage(&Msg);
-	}
+    while (GetMessage (&Msg, NULL, 0, 0) > 0) {
+        if (IsDialogMessage(hwnd, &Msg) == 0){
+            TranslateMessage(&Msg);
+            DispatchMessage(&Msg);
+        }
+    }
 	return Msg.wParam;
+
 }
 
 

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall -lws2_32 -static-libgcc -static-libstdc++ -mwindows
+CXXFLAGS = -std=c++11 -Wall -lws2_32 -static-libgcc -static-libstdc++ -mwindows -lcurl -DCURL_STATICLIB
 TARGET = context
 ICON = icon
 
