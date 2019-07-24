@@ -1,6 +1,6 @@
 <?php
 $reply = array();
-include 'db_conn.php'
+include 'db_conn.php';
 
 if(isset($_POST['email']) && isset($_POST['password'])){
 	$email = $_POST['email'];

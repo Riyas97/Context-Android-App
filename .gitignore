@@ -11,3 +11,4 @@ sample_win_gui/*.o
 ###############
 Winsock_Program/*.exe
 sample_win_gui/*.exe
+sample_curl/*.exe

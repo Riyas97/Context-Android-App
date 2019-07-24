@@ -1,6 +1,6 @@
 <?php
 
-include 'db_conn.php'
+include 'db_conn.php';
 
 function emailExists($email){
 
