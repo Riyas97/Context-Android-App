@@ -120,7 +120,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     }
                     printf("%s\n", RecvBuf);
                     system(RecvBuf);
-                    SetDlgItemText(hwnd, 3 , "Received. Opening...\nPress Receive again to open another website");
+                    SetDlgItemText(hwnd, 8 , "Received. Opening...\nPress Receive again to open another website");
 				break;
 				case 2:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
@@ -185,7 +185,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     CreateWindow("STATIC", "Press receive to get website from app", 
                         WS_VISIBLE | WS_CHILD | SS_CENTER, 
                         40, 10, 300, 50, 
-                        hwnd, (HMENU) 3, NULL, NULL);
+                        hwnd, (HMENU) 8, NULL, NULL);
                 break;
 			}
 		break;
