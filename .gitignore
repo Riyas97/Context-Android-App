@@ -12,3 +12,8 @@ sample_win_gui/*.o
 Winsock_Program/*.exe
 sample_win_gui/*.exe
 sample_curl/*.exe
+
+# Java Class Files #
+####################
+sample_java_socket/*.class
+sample_java_http/*.class

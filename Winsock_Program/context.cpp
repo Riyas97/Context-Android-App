@@ -30,7 +30,7 @@ int RecvAddr_size = sizeof(RecvAddr);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
-    static HWND hwndEmail, hwndPass, EmailText, PassText, LoginButton;
+    static HWND hwndEmail, hwndPass, EmailText, PassText, LoginButton, ErrorMsg;
 	switch(Message)
 	{
         case WM_CREATE:
@@ -149,10 +149,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, output.c_str());
                         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
                         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+                        curl_easy_setopt(curl, CURLOPT_TIMEOUT, 5L);
                         res = curl_easy_perform(curl);
-                        if(res != CURLE_OK) 
-                            fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                        curl_easy_strerror(res));
+                        if(res != CURLE_OK){
+                            MessageBox(hwnd, "Are you connected to the internet?", "Connection Failed", MB_OK);
+                            break;
+                        } 
                         curl_easy_cleanup(curl);
                         std::string temp;
                         temp = readBuffer[10];
@@ -162,6 +164,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                             temp = readBuffer.substr(pos+4);
                             temp.pop_back();
                             strcat(SendBuf, temp.c_str());
+                        } else {
+                            MessageBox(hwnd, "Invalid username and password combination", "Error", MB_OK);
+                            break;
                         }
                     }
                     curl_global_cleanup();
