@@ -27,8 +27,8 @@ def process_data(data,address):
                 connection_array[msg[2:]] = [0,address]
 
             if connection_array[msg[2:]][0] != 0:
-                sock.sendto("send".encode(), connection_array[msg[2:]][0])
-                
+                sock.sendto("send".encode(), address)
+
         else:
             print("invalid message\n")
             sock.sendto("invalid".encode(), address)
@@ -39,13 +39,13 @@ def process_data(data,address):
             sock.sendto("received".encode(), address)
 
             index = msg.find(":")
-            sock.sendto(msg[index+1:].encode(),connection_array[2:index][1])
+            sock.sendto(msg[index+1:].encode(),connection_array[msg[2:index]][1])
                 
         elif msg[1] == '2':
             sock.sendto("received".encode(), address)
 
             index = msg.find(":")
-            sock.sendto(msg[index+1:].encode(),connection_array[2:index][0])
+            sock.sendto(msg[index+1:].encode(),connection_array[msg[2:index]][0])
             
         else:
             print("invalid message\n")
