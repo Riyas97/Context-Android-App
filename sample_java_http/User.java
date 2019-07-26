@@ -20,7 +20,7 @@ public class User{
         int responseCode = con.getResponseCode();
         if (responseCode >= 400){
             in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-            return 0;
+            return 1;
         } else {
             in = new BufferedReader(new InputStreamReader(con.getInputStream()));
         }

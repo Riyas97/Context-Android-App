@@ -26,22 +26,22 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             handleSendText(intent);
         }
-
     }
 
     public void send(View v) {
+        final String user_id = Integer.toString(user);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run(){
                 try {
                     udpClient sender = new udpClient();
-                    sender.sendMsg("12");
+                    sender.sendMsg("12" + user_id);
                     String to_send = sender.recvMsg();
                     Log.i("asd",to_send);
                     to_send = sender.recvMsg();
                     Log.i("asd",to_send);
                     if(to_send.equals("send")) {
-                        String string_to_send = "22explorer \"";
+                        String string_to_send = "22" + user_id + ":explorer \"";
                         string_to_send = string_to_send.concat(e1.getText().toString()).concat("\"\0");
                         sender.sendMsg(string_to_send);
                         sender.recvMsg();
