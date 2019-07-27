@@ -39,7 +39,8 @@ DWORD WINAPI receving_thread(LPVOID lpParameter){
     }
     printf("%s\n", RecvBuf);
     system(RecvBuf);
-    SetDlgItemText(hwnd, 8 , "Received. Opening...\nPress Receive again to open another website");
+    SetDlgItemText(hwnd, 800 , "Received. Opening...\nPress Receive again to open another website");
+    ShowWindow(GetDlgItem(hwnd, 100),SW_SHOW);
     return 0;
 }
 
@@ -124,6 +125,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     printf("%s\n", RecvBuf);
                     memset(&RecvBuf[0], 0, sizeof(RecvBuf));
                     SetDlgItemText(hwnd, 800 , "Waiting to Receive, Please use app to send...");
+                    ShowWindow(GetDlgItem(hwnd, 100),SW_HIDE);
                     CreateThread(NULL, 0, receving_thread, hwnd, 0, 0);
 				break;
 				case 200:
