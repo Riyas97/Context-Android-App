@@ -28,6 +28,21 @@ char SendBuf[1024] = "11";
 int BufLen = 1024;
 int RecvAddr_size = sizeof(RecvAddr);
 
+DWORD WINAPI receving_thread(LPVOID lpParameter){
+    HWND hwnd = (HWND) lpParameter;
+    iResult = recvfrom(SendSocket,
+        RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
+    if (iResult == SOCKET_ERROR) {
+        wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
+        closesocket(SendSocket);
+        WSACleanup();
+    }
+    printf("%s\n", RecvBuf);
+    system(RecvBuf);
+    SetDlgItemText(hwnd, 8 , "Received. Opening...\nPress Receive again to open another website");
+    return 0;
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
     static HWND hwndEmail, hwndPass, EmailText, PassText, LoginButton, ErrorMsg;
@@ -91,36 +106,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     //START PROCESS FOR RECEIVING DATA
                     iResult = sendto(SendSocket,
                      SendBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, sizeof (RecvAddr));
+                    SetDlgItemText(hwnd, 800 , "Making connection with server...");
                     if (iResult == SOCKET_ERROR) {
                         wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
                         closesocket(SendSocket);
                         WSACleanup();
-                        return 1;
                     }
                     memset(&RecvBuf[0], 0, sizeof(RecvBuf));
                     iResult = recvfrom(SendSocket,
                                     RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
+                    SetDlgItemText(hwnd, 800 , "Connected to server!");
                     if (iResult == SOCKET_ERROR) {
                         wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
                         closesocket(SendSocket);
                         WSACleanup();
-                        return 1;
                     }
                     printf("%s\n", RecvBuf);
                     memset(&RecvBuf[0], 0, sizeof(RecvBuf));
-                    SetDlgItemText(hwnd, 3 , "Waiting to Receive, Please use app to send...");
-                    
-                    iResult = recvfrom(SendSocket,
-                                    RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
-                    if (iResult == SOCKET_ERROR) {
-                        wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
-                        closesocket(SendSocket);
-                        WSACleanup();
-                        return 1;
-                    }
-                    printf("%s\n", RecvBuf);
-                    system(RecvBuf);
-                    SetDlgItemText(hwnd, 8 , "Received. Opening...\nPress Receive again to open another website");
+                    SetDlgItemText(hwnd, 800 , "Waiting to Receive, Please use app to send...");
+                    CreateThread(NULL, 0, receving_thread, hwnd, 0, 0);
 				break;
 				case 200:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
@@ -128,8 +132,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                 case IDOK:
                 case 700:
                     TCHAR email_buf[256], password_buf[256];
-                    GetWindowText(hwndEmail, email_buf, 256);
-                    GetWindowText(hwndPass, password_buf, 256);
+                    HWND email_edit = GetDlgItem(hwnd, 300);
+                    HWND pass_edit = GetDlgItem(hwnd, 500);
+                    GetWindowText(email_edit, email_buf, 256);
+                    GetWindowText(pass_edit, password_buf, 256);
                     //START OF CURL CODE
 
                     CURL *curl;
@@ -299,7 +305,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     // and the specified port number.
     RecvAddr.sin_family = AF_INET;
     RecvAddr.sin_port = htons(Port);
-    RecvAddr.sin_addr.s_addr = inet_addr("118.189.187.18");
+    RecvAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     /////////////////////////////
     //WINSOCK CODE ENDS HERE////
     ///////////////////////////

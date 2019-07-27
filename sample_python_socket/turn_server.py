@@ -4,6 +4,7 @@ import sys
 
 def process_data(data,address):
     msg = data.decode()
+    msg = msg.rstrip('\x00')
     # 1 - connection, 2 - relay
     if msg[0] == '1':
     # 1 - PC, 2 - phone
