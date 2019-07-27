@@ -307,7 +307,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
     // and the specified port number.
     RecvAddr.sin_family = AF_INET;
     RecvAddr.sin_port = htons(Port);
-    RecvAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    RecvAddr.sin_addr.s_addr = inet_addr("118.189.187.18");
     /////////////////////////////
     //WINSOCK CODE ENDS HERE////
     ///////////////////////////
