@@ -41,14 +41,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                 WS_CHILD | WS_VISIBLE | ES_LEFT | ES_AUTOHSCROLL | WS_TABSTOP, 
                 110, 30, 240, 20,   // set size in WM_SIZE message 
                 hwnd,         // parent window 
-                (HMENU) 3,   // edit control ID 
+                (HMENU) 300,   // edit control ID 
                 (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE), 
                 NULL);        // pointer not needed
 
             EmailText = CreateWindow("STATIC", TEXT("Email:"), 
                 WS_VISIBLE | WS_CHILD | SS_LEFT, 
                 20, 30, 80, 20, hwnd, 
-                (HMENU) 4, 
+                (HMENU) 400, 
                 (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE), 
                 NULL);
             
@@ -58,20 +58,20 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                 WS_CHILD | WS_VISIBLE | ES_LEFT | ES_AUTOHSCROLL | ES_PASSWORD | WS_TABSTOP, 
                 110, 55, 240, 20,   // set size in WM_SIZE message 
                 hwnd,         // parent window 
-                (HMENU) 5,   // edit control ID 
+                (HMENU) 500,   // edit control ID 
                 (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE), 
                 NULL);        // pointer not needed
 
             PassText = CreateWindow("STATIC", TEXT("Password:"), 
                 WS_VISIBLE | WS_CHILD | SS_LEFT, 
                 20, 55, 80, 20, hwnd, 
-                (HMENU) 6, 
+                (HMENU) 600, 
                 (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE), 
                 NULL);
 
             LoginButton = CreateWindow("button", "Login",
                 WS_VISIBLE | WS_CHILD, 50, 100, 80, 25,
-                hwnd, (HMENU) 7, NULL, NULL);
+                hwnd, (HMENU) 700, NULL, NULL);
         }
         break;
         case WM_PAINT:
@@ -87,7 +87,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		case WM_COMMAND:
 			switch(LOWORD(wParam))
 			{
-				case 1:
+				case 100:
                     //START PROCESS FOR RECEIVING DATA
                     iResult = sendto(SendSocket,
                      SendBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, sizeof (RecvAddr));
@@ -122,15 +122,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     system(RecvBuf);
                     SetDlgItemText(hwnd, 8 , "Received. Opening...\nPress Receive again to open another website");
 				break;
-				case 2:
+				case 200:
 					PostMessage(hwnd, WM_CLOSE, 0, 0);
 				break;
-                case 7:
+                case IDOK:
+                case 700:
                     TCHAR email_buf[256], password_buf[256];
-                    HWND email_edit = GetDlgItem(hwnd, 3);
-                    HWND pass_edit = GetDlgItem(hwnd, 5);
-                    GetWindowText(email_edit, email_buf, 256);
-                    GetWindowText(pass_edit, password_buf, 256);
+                    GetWindowText(hwndEmail, email_buf, 256);
+                    GetWindowText(hwndPass, password_buf, 256);
                     //START OF CURL CODE
 
                     CURL *curl;
@@ -154,7 +153,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                         if(res != CURLE_OK){
                             MessageBox(hwnd, "Are you connected to the internet?", "Connection Failed", MB_OK);
                             break;
-                        } 
+                        }
                         curl_easy_cleanup(curl);
                         std::string temp;
                         temp = readBuffer[10];
@@ -180,17 +179,17 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                     CreateWindow(TEXT("button"), TEXT("Receive"),    
                         WS_VISIBLE | WS_CHILD ,
                         100, 80, 80, 25,        
-                        hwnd, (HMENU) 1, NULL, NULL);    
+                        hwnd, (HMENU) 100, NULL, NULL);    
 
                     CreateWindow(TEXT("button"), TEXT("Quit"),    
                         WS_VISIBLE | WS_CHILD ,
                         200, 80, 80, 25,        
-                        hwnd, (HMENU) 2, NULL, NULL);
+                        hwnd, (HMENU) 200, NULL, NULL);
 
                     CreateWindow("STATIC", "Press receive to get website from app", 
                         WS_VISIBLE | WS_CHILD | SS_CENTER, 
                         40, 10, 300, 50, 
-                        hwnd, (HMENU) 8, NULL, NULL);
+                        hwnd, (HMENU) 800, NULL, NULL);
                 break;
 			}
 		break;
