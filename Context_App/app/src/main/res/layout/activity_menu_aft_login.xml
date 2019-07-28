@@ -4,7 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".menu_aft_login"
+    tools:openDrawer="start">
+
+    <include
+        layout="@layout/app_bar_menu_aft_login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
     <EditText
         android:id="@+id/editText"

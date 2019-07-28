@@ -1,7 +1,11 @@
 package orbital.respberry.context;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import java.io.IOException;
@@ -18,17 +22,19 @@ public class menu_aft_login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu_aft_login);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         int saved_user_id = SaveState.getUserId(menu_aft_login.this);
         String saved_user_name = SaveState.getUserName(menu_aft_login.this);
+        app = ((MyApp) this.getApplication());
         if(saved_user_id == 0){
-            app = ((MyApp) this.getApplication());
             myuser = app.getUser();
         } else {
             myuser = new User();
             myuser.setUserid(saved_user_id);
             myuser.setUsername(saved_user_name);
         }
-        setContentView(R.layout.activity_menu_aft_login);
         e1 = (EditText)findViewById(R.id.editText);
         Bundle bundle = getIntent().getExtras();
         if (bundle != null){
@@ -37,6 +43,27 @@ public class menu_aft_login extends AppCompatActivity {
         if (sharedText.length() != 0){
             handleSendText(sharedText);
         }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_aft_login, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if (id == R.id.action_signout){
+            SaveState.clearData(menu_aft_login.this);
+            app.setUser(new User());
+            Intent main = new Intent(menu_aft_login.this, MainActivity.class);
+            startActivity(main);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void send(View v) {
