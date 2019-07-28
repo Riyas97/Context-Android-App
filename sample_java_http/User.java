@@ -74,14 +74,7 @@ public class User{
 
     public static void main(String[] args) throws Exception{
         User new_user = new User();
-        for(int i = 20;i< 100; i++){
-            String email = "test"+ i + "@test.com";
-            String password = "p@ssw0rd";
-            System.out.println("Now creating:" + email);
-            new_user.register(email,password);
-            int the_user_id = new_user.login(email,password);
-            System.out.println(the_user_id);
-        }
+        new_user.register("riyas", "riyas123");
     }
 
 }

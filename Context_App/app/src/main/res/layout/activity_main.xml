@@ -1,36 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <EditText
-        android:id="@+id/editText"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
-        android:onClick="send"
-        android:text="SEND"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        <ImageView
 
-</android.support.constraint.ConstraintLayout>
+            android:src="@drawable/main_icon"
+            android:layout_width="200dp"
+            android:layout_height="200dp" />
+        
+        <TextView
+            android:id="@+id/txt_slogan"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:text="Open a website link in your laptop through your phone!"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <info.hoang8f.widget.FButton
+            android:id="@+id/btnSignUp"
+            android:text="Sign Up"
+            android:textColor="@android:color/white"
+            android:shadowColor="@android:color/black"
+            app:shadowEnabled="true"
+            app:fButtonColor="@android:color/holo_red_dark"
+            app:shadowHeight="5dp"
+            app:cornerRadius="4dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <info.hoang8f.widget.FButton
+            android:id="@+id/btnSignIn"
+            android:text="Sign In"
+            android:textColor="@android:color/white"
+            android:shadowColor="@android:color/black"
+            app:shadowEnabled="true"
+            app:fButtonColor="@color/btnlogin"
+            app:shadowHeight="5dp"
+            app:cornerRadius="4dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</RelativeLayout>
