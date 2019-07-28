@@ -14,6 +14,7 @@ public class menu_aft_login extends AppCompatActivity {
     User myuser;
     MyApp app;
     EditText e1;
+    String sharedText = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,10 @@ public class menu_aft_login extends AppCompatActivity {
         }
         setContentView(R.layout.activity_menu_aft_login);
         e1 = (EditText)findViewById(R.id.editText);
-        String sharedText = getIntent().getExtras().getString("sharedText");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            sharedText = getIntent().getExtras().getString("sharedText");
+        }
         if (sharedText.length() != 0){
             handleSendText(sharedText);
         }
