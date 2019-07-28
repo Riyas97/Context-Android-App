@@ -1,4 +1,4 @@
-package orbital.respberry.eatz;
+package orbital.respberry.context;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

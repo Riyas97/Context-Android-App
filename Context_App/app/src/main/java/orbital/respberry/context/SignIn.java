@@ -1,4 +1,4 @@
-package orbital.respberry.eatz;
+package orbital.respberry.context;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 
-import orbital.respberry.eatz.Model.User;
+import orbital.respberry.context.Model.User;
 
 public class SignIn extends AppCompatActivity {
     MaterialEditText editPhone, editPassword;

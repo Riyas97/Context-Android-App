@@ -1,8 +1,8 @@
-package orbital.respberry.eatz;
+package orbital.respberry.context;
 
 import android.app.Application;
 
-import orbital.respberry.eatz.Model.User;
+import orbital.respberry.context.Model.User;
 
 public class MyApp extends Application {
     private User appUser;

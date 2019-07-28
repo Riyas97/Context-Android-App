@@ -1,4 +1,4 @@
-package orbital.respberry.eatz;
+package orbital.respberry.context;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.widget.EditText;
 import java.io.IOException;
 import android.util.Log;
 
-import orbital.respberry.eatz.Model.User;
+import orbital.respberry.context.Model.User;
 
 
 public class menu_aft_login extends AppCompatActivity {

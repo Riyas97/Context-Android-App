@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="orbital.respberry.eatz">
+    package="orbital.respberry.context">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name=".MyApp"
+        android:name="orbital.respberry.context.MyApp"
         android:allowBackup="true"
         android:appComponentFactory="whateverString"
         android:icon="@mipmap/ic_launcher"
@@ -19,12 +19,12 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:appComponentFactory">
         <activity
-            android:name=".menu_aft_login"
+            android:name="orbital.respberry.context.menu_aft_login"
             android:label="@string/title_activity_menu_aft_login"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".SignUp" />
-        <activity android:name=".SignIn" />
-        <activity android:name=".MainActivity">
+        <activity android:name="orbital.respberry.context.SignUp" />
+        <activity android:name="orbital.respberry.context.SignIn" />
+        <activity android:name="orbital.respberry.context.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

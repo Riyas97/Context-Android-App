@@ -1,4 +1,4 @@
-package orbital.respberry.eatz.Model;
+package orbital.respberry.context.Model;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -6,8 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-
-import orbital.respberry.eatz.SaveState;
 
 
 public class User{
