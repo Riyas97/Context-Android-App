@@ -61,7 +61,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
                 (HINSTANCE) GetWindowLong(hwnd, GWL_HINSTANCE), 
                 NULL);        // pointer not needed
 
-            EmailText = CreateWindow("STATIC", TEXT("Email:"), 
+            EmailText = CreateWindow("STATIC", TEXT("Username:"), 
                 WS_VISIBLE | WS_CHILD | SS_LEFT, 
                 20, 30, 80, 20, hwnd, 
                 (HMENU) 400, 
