@@ -23,7 +23,7 @@ public class Onboarding extends MaterialIntroActivity {
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.onboardbackground)
-                .buttonsColor(R.color.onboardingbutton)
+                .buttonsColor(R.color.colorAccent)
                 .image(R.drawable.theexenew)
                 .title("Additional Software Required..?")
                 .description("Remember to download and open the Context.exe file for laptop")
@@ -31,7 +31,7 @@ public class Onboarding extends MaterialIntroActivity {
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.onboardbackground)
-                .buttonsColor(R.color.onboardingbutton)
+                .buttonsColor(R.color.colorAccent)
                 .image(R.drawable.context_logo)
                 .title("How to get started")
                 .description("After logging in, enter or share a website link in the app and click 'Receive' in the exe file")
@@ -40,7 +40,7 @@ public class Onboarding extends MaterialIntroActivity {
 
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.onboardbackground)
-                .buttonsColor(R.color.onboardingbutton)
+                .buttonsColor(R.color.colorAccent)
                 .image(R.drawable.areyouready)
                 .description("Thats it for now. Are you ready to begin exploring the app?")
                 .build());

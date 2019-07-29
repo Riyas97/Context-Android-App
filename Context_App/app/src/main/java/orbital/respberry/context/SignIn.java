@@ -45,6 +45,7 @@ public class SignIn extends AppCompatActivity {
                         SaveState.setUserName(SignIn.this,myuser.getUsername(),myuser.getUserid());
                         app.setUser(myuser);
                         Intent next = new Intent(SignIn.this, menu_aft_login.class);
+                        next.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(next);
                         finish();
                     } else if (myuser.getStatus() == 1) {

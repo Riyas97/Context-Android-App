@@ -47,6 +47,10 @@ public class User{
         return check;
     }
 
+    public void setCheck(boolean input){
+        this.check = input;
+    }
+
     //status
     // 0 -- okay
     // 1 -- wrong user and password combo
@@ -59,7 +63,7 @@ public class User{
             @Override
             public void run() {
                 try {
-                    check = false;
+                    setCheck(false);
                     String data = "email=" + URLEncoder.encode(email1, "UTF-8")
                             + "&password=" + URLEncoder.encode(password1, "UTF-8");
                     BufferedReader in;
@@ -89,7 +93,7 @@ public class User{
                     if (status == 0) {
                         user_id = Integer.parseInt(response.substring(51, response.length() - 1));
                     }
-                    check = true;
+                    setCheck(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -110,7 +114,7 @@ public class User{
             @Override
             public void run() {
                 try {
-                    check = false;
+                    setCheck(false);
                     String data = "email=" + URLEncoder.encode(email1,"UTF-8")
                             + "&password=" + URLEncoder.encode(password1, "UTF-8");
                     BufferedReader in;
@@ -136,7 +140,7 @@ public class User{
                     }
                     in.close();
                     status = Character.getNumericValue(response.charAt(10));
-                    check = true;
+                    setCheck(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

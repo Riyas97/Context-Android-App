@@ -1,6 +1,8 @@
 package orbital.respberry.context;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -57,6 +59,10 @@ public class menu_aft_login extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_signout){
             SaveState.clearData(menu_aft_login.this);
+            SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            SharedPreferences.Editor e = getPrefs.edit();
+            e.putBoolean("firstStart", false);
+            e.apply();
             app.setUser(new User());
             Intent main = new Intent(menu_aft_login.this, MainActivity.class);
             startActivity(main);

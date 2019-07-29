@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());;
+                SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
                 boolean checkFirstTime = getPrefs.getBoolean("firstStart", true);
 
                 if (checkFirstTime) {
@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent signup = new Intent(MainActivity.this, SignUp.class);
                     signup.putExtra("sharedText", sharedText);
                     startActivity(signup);
-                    finish();
                 }
             });
 
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, SignIn.class);
                     intent.putExtra("sharedText", sharedText);
                     startActivity(intent);
-                    finish();
                 }
             });
         } else {
