@@ -30,17 +30,19 @@ int RecvAddr_size = sizeof(RecvAddr);
 
 DWORD WINAPI receving_thread(LPVOID lpParameter){
     HWND hwnd = (HWND) lpParameter;
-    iResult = recvfrom(SendSocket,
+    while(true){
+        iResult = recvfrom(SendSocket,
         RecvBuf, BufLen, 0, (SOCKADDR *) & RecvAddr, &RecvAddr_size);
-    if (iResult == SOCKET_ERROR) {
-        wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
-        closesocket(SendSocket);
-        WSACleanup();
+        if (iResult == SOCKET_ERROR) {
+            wprintf(L"sendto failed with error: %d\n", WSAGetLastError());
+            closesocket(SendSocket);
+            WSACleanup();
+        }
+        printf("%s\n", RecvBuf);
+        system(RecvBuf);
+        memset(&RecvBuf[0], 0, sizeof(RecvBuf));
+        SetDlgItemText(hwnd, 800 , "Received. Opening...\nSend another website from Phone");
     }
-    printf("%s\n", RecvBuf);
-    system(RecvBuf);
-    SetDlgItemText(hwnd, 800 , "Received. Opening...\nPress Receive again to open another website");
-    ShowWindow(GetDlgItem(hwnd, 100),SW_SHOW);
     return 0;
 }
 
