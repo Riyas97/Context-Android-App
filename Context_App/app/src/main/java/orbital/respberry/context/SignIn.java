@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class SignIn extends AppCompatActivity {
                     myuser.login();
                     while(!myuser.getCheck());
                     if (myuser.getStatus() == 0) {
+                        Log.i("username", myuser.getUsername() + " id : " + myuser.getUserid());
                         SaveState.setUserName(SignIn.this,myuser.getUsername(),myuser.getUserid());
                         app.setUser(myuser);
                         Intent next = new Intent(SignIn.this, menu_aft_login.class);

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -56,12 +57,14 @@ public class SignUp extends AppCompatActivity {
                         Toast.makeText(SignUp.this, "Unexpected error", Toast.LENGTH_SHORT).show();
                     }
                     if(okaylogin){
+                        myuser.setCheck(false);
                         myuser.login();
                     } else {
                         return;
                     }
                     while(!myuser.getCheck());
                     if (myuser.getStatus() == 0) {
+                        Log.i("username", myuser.getUsername() + " id : " + myuser.getUserid());
                         SaveState.setUserName(SignUp.this,myuser.getUsername(),myuser.getUserid());
                         app.setUser(myuser);
                         Intent next = new Intent(SignUp.this, menu_aft_login.class);

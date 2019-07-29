@@ -1,5 +1,7 @@
 package orbital.respberry.context.Model;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -13,7 +15,7 @@ public class User{
     private String password;
     private int user_id;
     private int status;
-    private boolean check;
+    private boolean check = false;
 
     public User(){
 
@@ -92,6 +94,7 @@ public class User{
 
                     if (status == 0) {
                         user_id = Integer.parseInt(response.substring(51, response.length() - 1));
+                        Log.i("user_id :", Integer.toString(user_id));
                     }
                     setCheck(true);
                 } catch (Exception e) {
