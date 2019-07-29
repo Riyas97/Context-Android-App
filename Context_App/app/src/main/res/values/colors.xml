@@ -6,4 +6,6 @@
 
     <color name="btnsignup">#39796b</color>
     <color name="btnlogin">#A9d440</color>
+    <color name="onboardbackground">#323232</color>
+    <color name="onboardingbutton">#ffffff</color>
 </resources>

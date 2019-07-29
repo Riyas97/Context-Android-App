@@ -2,6 +2,8 @@ package orbital.respberry.context;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,31 @@ public class MainActivity extends AppCompatActivity {
     String sharedText = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences getPrefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());;
+                boolean checkFirstTime = getPrefs.getBoolean("firstStart", true);
+
+                if (checkFirstTime) {
+                    final Intent i = new Intent(MainActivity.this, Onboarding.class);
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            startActivity(i);
+                        }
+                    });
+
+                    SharedPreferences.Editor e = getPrefs.edit();
+
+                    e.putBoolean("firstStart", false);
+
+                    e.apply();
+                }
+            }
+        });
+
+        t.start();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent sharedintent = getIntent();
@@ -24,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             sharedText = sharedintent.getStringExtra(Intent.EXTRA_TEXT);
         }
+
+
 
         if (SaveState.getUserId(MainActivity.this) == 0) {
             btnSignIn = (Button) findViewById(R.id.btnSignIn);
