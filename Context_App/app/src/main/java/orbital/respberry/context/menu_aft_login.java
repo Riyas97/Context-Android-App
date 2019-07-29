@@ -72,6 +72,14 @@ public class menu_aft_login extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public String checklink(String link){
+        if (link.startsWith("http")){
+            return link;
+        } else {
+            return "http://" + link;
+        }
+    }
+
     public void send(View v) {
         final String user_id = Integer.toString(myuser.getUserid());
         Thread thread = new Thread(new Runnable() {
@@ -86,7 +94,7 @@ public class menu_aft_login extends AppCompatActivity {
                     Log.i("asd",to_send);
                     if(to_send.equals("send")) {
                         String string_to_send = "22" + user_id + ":explorer \"";
-                        string_to_send = string_to_send.concat(e1.getText().toString()).concat("\"\0");
+                        string_to_send = string_to_send.concat(checklink(e1.getText().toString())).concat("\"\0");
                         sender.sendMsg(string_to_send);
                         sender.recvMsg();
                     }
@@ -113,7 +121,7 @@ public class menu_aft_login extends AppCompatActivity {
                         Log.i("asd",to_send);
                         if(to_send.equals("send")) {
                             String string_to_send = "22" + user_id + ":explorer \"";
-                            string_to_send = string_to_send.concat(sharedText).concat("\"\0");
+                            string_to_send = string_to_send.concat(checklink(sharedText)).concat("\"\0");
                             sender.sendMsg(string_to_send);
                             sender.recvMsg();
                         }
