@@ -1,8 +1,7 @@
 # Context
-This project was built for Orbital 2019 .
 
 ## Introduction
-
+This project was built for Orbital 2019. This app was developed using Andorid Studio for users to connect their android devices with PCs. Using the app, users can open a website in PC from phone and vice versa. Users can also transfer files between devices seamlessly. For more details, please refer to the final report document.
 
 ## Building the Program
 This program is build with mingw32 with libcurl 32bit and OpenSSL 1.1.1 libraries.
