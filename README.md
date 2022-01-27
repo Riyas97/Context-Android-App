@@ -1,7 +1,7 @@
-# Context
+# Context PC-Android Connector App
 
 ## Introduction
-This project was built for Orbital 2019. This app was developed using Andorid Studio for users to connect their android devices with PCs. Using the app, users can open a website in PC from phone and vice versa. Users can also transfer files between devices seamlessly. For more details, please refer to the ReadMe_Orbital_Milestone 3_1717.pdf document.
+This project was built for Orbital 2019. This app was developed using Andorid Studio for users to connect their android devices with PCs. Using the app, users can open a website in PC from phone and vice versa. Users can also transfer files between devices seamlessly. For more details, please refer to the `ReadMe_Orbital_Milestone 3_1717.pdf` document.
 
 ## Building the Program
 This program is build with mingw32 with libcurl 32bit and OpenSSL 1.1.1 libraries.
@@ -18,5 +18,5 @@ you can find both the apk and exe inside BUILDS.
 3. Create a user account on the application or sign in if you already created an account.
 4. Sign in with the same account on the pc application.
 5. Click receive on the pc application.
-6. On your phone application, you can type the link directly on the app or also share links from chrome or youtube.
+6. On your phone application, you can type the link directly on the app or also share links from chrome or youtube. You can also share files with small sizes.
 7. See that the link open on your computer.
